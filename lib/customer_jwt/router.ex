@@ -3,9 +3,11 @@ defmodule CustomerJwt.Router do
   use Plug.ErrorHandler
 
   alias CustomerJwt.Plug.VerifyAppProxyRequest
+  alias CustomerJwt.Plug.CreateToken
 
   plug Plug.Logger
   plug VerifyAppProxyRequest, paths: ["/token"], shared_secret: Application.get_env(:customer_jwt, :shared_secret)
+  plug CreateToken, paths: ["/token"]
   plug :match
   plug :dispatch
 

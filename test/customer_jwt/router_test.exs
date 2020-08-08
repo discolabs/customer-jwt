@@ -28,6 +28,13 @@ defmodule CustomerJwt.RouterTest do
     end
   end
 
+  test "token endpoint raises missing customer error when no customer provided" do
+    assert_raise CustomerJwt.Plug.CreateToken.MissingCustomerError, fn ->
+      conn = conn(:get, "/token", %{signature: "b4f2fae23b2660cfb46cc27563740b4d1771e6dd0a3e9d5c19dc027a87768377"})
+      Router.call(conn, @opts)
+    end
+  end
+
   test "token endpoint returns jwt when customer id and valid signature provided" do
     conn = conn(:get, "/token", %{customer_id: "3041789640759", signature: "816cb937a21250cc9353982f3dc1187b53c566428bd701652efc4c3ab178ac3b"})
     conn = Router.call(conn, @opts)
