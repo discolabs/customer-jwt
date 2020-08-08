@@ -1,6 +1,4 @@
 defmodule CustomerJwt.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -10,6 +8,7 @@ defmodule CustomerJwt.Application do
     children = [
       {Plug.Cowboy, scheme: :http, plug: CustomerJwt.Router, options: [port: cowboy_port()]}
     ]
+
     opts = [strategy: :one_for_one, name: CustomerJwt.Supervisor]
 
     Logger.info("Starting application...")

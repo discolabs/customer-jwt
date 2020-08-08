@@ -17,7 +17,7 @@ defmodule CustomerJwt.Router do
     send_resp(conn, 404, "Not Found")
   end
 
-  defp handle_errors(conn, %{kind: kind, reason: reason, stack: stack}) do
+  defp handle_errors(conn, %{reason: reason}) do
     send_resp(conn, conn.status, reason.message)
   end
 end

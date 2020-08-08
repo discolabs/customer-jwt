@@ -25,10 +25,8 @@ defmodule CustomerJwt.Plug.VerifyAppProxyRequest do
     options
   end
 
-  def call(%Plug.Conn{ request_path: path } = conn, options) do
+  def call(%Plug.Conn{request_path: path} = conn, options) do
     conn = Plug.Conn.fetch_query_params(conn)
-
-    Logger.info("---> path #{conn.path_params["customer_id"]}")
 
     if path in options[:paths], do: verify_signature!(conn.query_params, options[:shared_secret])
 
