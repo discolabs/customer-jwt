@@ -7,7 +7,7 @@ defmodule CustomerJwt.Plug.VerifyAppProxyRequest do
     Error raised when no signature is provided.
     """
 
-    defexception message: ""
+    defexception message: "Missing app proxy signature", plug_status: 400
   end
 
   defmodule InvalidSignatureError do
@@ -15,7 +15,7 @@ defmodule CustomerJwt.Plug.VerifyAppProxyRequest do
     Error raised when the provided signature is invalid.
     """
 
-    defexception message: ""
+    defexception message: "Invalid app proxy signature", plug_status: 401
   end
 
   def init(options) do
@@ -27,6 +27,8 @@ defmodule CustomerJwt.Plug.VerifyAppProxyRequest do
 
   def call(%Plug.Conn{ request_path: path } = conn, options) do
     conn = Plug.Conn.fetch_query_params(conn)
+
+    Logger.info("---> path #{conn.path_params["customer_id"]}")
 
     if path in options[:paths], do: verify_signature!(conn.query_params, options[:shared_secret])
 
