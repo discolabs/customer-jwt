@@ -1,6 +1,9 @@
 defmodule CustomerJwt.Router do
   use Plug.Router
 
+  alias CustomerJwt.Plug.VerifyAppProxyRequest
+
+  plug VerifyAppProxyRequest, paths: ["/token"], shared_secret: Application.get_env(:customer_jwt, :shared_secret)
   plug :match
   plug :dispatch
 
