@@ -12,7 +12,7 @@ defmodule CustomerJwt.Router do
   plug :dispatch
 
   get "/token" do
-    send_resp(conn, 200, "{token}")
+    conn
   end
 
   match _ do

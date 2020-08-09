@@ -1,4 +1,5 @@
 defmodule CustomerJwt.Plug.CreateToken do
+  import Plug.Conn
 
   require Logger
 
@@ -21,9 +22,10 @@ defmodule CustomerJwt.Plug.CreateToken do
 
     if path in options[:paths] do
       verify_parameters!(conn.query_params)
+      generate_token(conn)
+    else
+      conn
     end
-
-    conn
   end
 
   defp verify_parameters!(query_params) do
@@ -32,6 +34,12 @@ defmodule CustomerJwt.Plug.CreateToken do
     unless query_params["customer_id"] != nil do
       raise(MissingCustomerError)
     end
+  end
+
+  defp generate_token(conn) do
+    conn
+    |> put_resp_content_type("application/liquid")
+    |> send_resp(200, "123.456.789")
   end
 
 end
