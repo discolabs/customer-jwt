@@ -23,25 +23,39 @@ defmodule CustomerJwt.RouterTest do
 
   test "token endpoint raises invalid signature error when invalid signature provided" do
     assert_raise CustomerJwt.Plug.VerifyAppProxyRequest.InvalidSignatureError, fn ->
-      conn = conn(:get, "/token", %{customer_id: "3041789640759", signature: "invalid"})
+      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", timestamp: "1591764998", signature: "invalid"})
+      Router.call(conn, @opts)
+    end
+  end
+
+  test "token endpoint raises missing shop error when no shop provided" do
+    assert_raise CustomerJwt.Plug.CreateToken.MissingShopError, fn ->
+      conn = conn(:get, "/token", %{customer_id: "3041789640759", timestamp: "1591764998", signature: "6d87576f1799f712db2a76f4bff0927239835a189203363ee9912f51de3a3fa5"})
       Router.call(conn, @opts)
     end
   end
 
   test "token endpoint raises missing customer error when no customer provided" do
     assert_raise CustomerJwt.Plug.CreateToken.MissingCustomerError, fn ->
-      conn = conn(:get, "/token", %{signature: "b4f2fae23b2660cfb46cc27563740b4d1771e6dd0a3e9d5c19dc027a87768377"})
+      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", timestamp: "1591764998", signature: "63e4c8c85dc022239622c64dc796356a74e3f8e29edda3c96d74530cc739c715"})
       Router.call(conn, @opts)
     end
   end
 
-  test "token endpoint returns jwt when customer id and valid signature provided" do
-    conn = conn(:get, "/token", %{customer_id: "3041789640759", signature: "816cb937a21250cc9353982f3dc1187b53c566428bd701652efc4c3ab178ac3b"})
+  test "token endpoint raises missing timestamp error when no timestamp provided" do
+    assert_raise CustomerJwt.Plug.CreateToken.MissingTimestampError, fn ->
+      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", signature: "f7adf74de4f95e3a4f174f3f17abd604da3f2043391dc0009d954a9f5c9e823b"})
+      Router.call(conn, @opts)
+    end
+  end
+
+  test "token endpoint returns expected jwt when shop, customer, timestamp and valid signature provided" do
+    conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", timestamp: "1591764998", signature: "45d8daaeb0f9068ed7a4cbcb8463737efb158770725ff975429f23badcf5d9d4"})
     conn = Router.call(conn, @opts)
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "{% if customer.id == 3041789640759 %}eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGVzaG9wLm15c2hvcGlmeS5jb20vYWRtaW4iLCJkZXN0IjoiaHR0cHM6Ly9leGFtcGxlc2hvcC5teXNob3BpZnkuY29tIiwiYXVkIjoiYXBpLWtleS0xMjMiLCJzdWIiOjMwNDE3ODk2NDA3NTksImV4cCI6MTU5MTc2NTA1OCwibmJmIjoxNTkxNzY0OTk4LCJpYXQiOjE1OTE3NjQ5OTgsImp0aSI6ImY4OTEyMTI5LTFhZjYtNGNhZC05Y2EzLTc2YjBmNzYyMTA4NyJ9.9N9jPXJHD0kNaE3S_-oEcrWpsk9FMSqWt7HzbbA_Ifw{% endif %}"
+    assert conn.resp_body == "{% if customer.id == 3041789640759 %}eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIqIiwiZGVzdCI6Imh0dHBzOi8vZXhhbXBsZXN0b3JlLm15c2hvcGlmeS5jb20iLCJleHAiOjE1OTE3NjUwNTgsImlhdCI6MTU5MTc2NDk5OCwiaXNzIjoiaHR0cHM6Ly9leGFtcGxlc3RvcmUubXlzaG9waWZ5LmNvbS9hZG1pbiIsImp0aSI6IjJva29ncXFrMzNqcTE4a2pzbzAwMDBhMSIsIm5iZiI6MTU5MTc2NDk5OCwic3ViIjozMDQxNzg5NjQwNzU5fQ.AmSXcz2Niw10yZFas7zqVq2ioJt0RzvbREkxTfQf_pE{% endif %}"
   end
 
 end

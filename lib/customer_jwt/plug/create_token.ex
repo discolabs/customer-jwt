@@ -4,19 +4,15 @@ defmodule CustomerJwt.Plug.CreateToken do
   require Logger
 
   defmodule MissingShopError do
-    @moduledoc """
-    Error raised when no shop is provided.
-    """
-
     defexception message: "Missing shop", plug_status: 400
   end
 
   defmodule MissingCustomerError do
-    @moduledoc """
-    Error raised when no customer is provided.
-    """
-
     defexception message: "Missing customer", plug_status: 400
+  end
+
+  defmodule MissingTimestampError do
+    defexception message: "Missing timestamp", plug_status: 400
   end
 
   def init(options) do
@@ -40,22 +36,25 @@ defmodule CustomerJwt.Plug.CreateToken do
   defp verify_parameters!(query_params) do
     Logger.info("---> provided shop #{query_params["shop"]}")
     Logger.info("---> provided customer #{query_params["customer_id"]}")
+    Logger.info("---> provided timestamp #{query_params["timestamp"]}")
 
     unless query_params["shop"] != nil, do: raise(MissingShopError)
     unless query_params["customer_id"] != nil, do: raise(MissingCustomerError)
+    unless query_params["timestamp"] != nil, do: raise(MissingTimestampError)
   end
 
   defp generate_response(conn, query_params) do
     conn
     |> put_resp_content_type("application/liquid")
-    |> send_resp(200, generate_token(query_params))
+    |> send_resp(200, "{% if customer.id == #{query_params["customer_id"]} %}#{generate_token(query_params)}{% endif %}")
   end
 
   defp generate_token(query_params) do
-    customer_id = Integer.parse(query_params["customer_id"])
+    customer_id = String.to_integer(query_params["customer_id"])
     shopify_domain = query_params["shop"]
+    current_time = String.to_integer(query_params["timestamp"])
 
-    {:ok, token, claims} = CustomerJwt.Token.generate_and_sign_for_customer(customer_id, shopify_domain)
+    {:ok, token, claims} = CustomerJwt.Token.generate_and_sign_for_customer(customer_id, shopify_domain, current_time)
 
     token
   end

@@ -1,23 +1,27 @@
 defmodule CustomerJwt.Token do
   use Joken.Config
 
+  @validity_in_seconds 60
   @shared_secret Application.get_env(:customer_jwt, :shared_secret)
 
-  def generate_and_sign_for_customer(customer_id, shopify_domain) do
-    claims = get_customer_claims(customer_id, shopify_domain)
+  def generate_and_sign_for_customer(customer_id, shopify_domain, current_time) do
+    claims = get_customer_claims(customer_id, shopify_domain, current_time)
     signer = get_shopify_domain_signer(shopify_domain)
     generate_and_sign(claims, signer)
   end
 
   def token_config do
-    default_claims(default_exp: 60, aud: "*")
+    default_claims(aud: "*")
   end
 
-  defp get_customer_claims(customer_id, shopify_domain) do
+  defp get_customer_claims(customer_id, shopify_domain, current_time) do
     %{
       "iss" => "https://#{shopify_domain}/admin",
       "dest" => "https://#{shopify_domain}",
-      "sub" => customer_id
+      "sub" => customer_id,
+      "nbf" => current_time,
+      "iat" => current_time,
+      "exp" => current_time + @validity_in_seconds
     }
   end
 
