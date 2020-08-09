@@ -41,7 +41,7 @@ defmodule CustomerJwt.RouterTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGVzaG9wLm15c2hvcGlmeS5jb20vYWRtaW4iLCJkZXN0IjoiaHR0cHM6Ly9leGFtcGxlc2hvcC5teXNob3BpZnkuY29tIiwiYXVkIjoiYXBpLWtleS0xMjMiLCJzdWIiOjMwNDE3ODk2NDA3NTksImV4cCI6MTU5MTc2NTA1OCwibmJmIjoxNTkxNzY0OTk4LCJpYXQiOjE1OTE3NjQ5OTgsImp0aSI6ImY4OTEyMTI5LTFhZjYtNGNhZC05Y2EzLTc2YjBmNzYyMTA4NyJ9.9N9jPXJHD0kNaE3S_-oEcrWpsk9FMSqWt7HzbbA_Ifw"
+    assert conn.resp_body == "{% if customer.id == 3041789640759 %}eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGVzaG9wLm15c2hvcGlmeS5jb20vYWRtaW4iLCJkZXN0IjoiaHR0cHM6Ly9leGFtcGxlc2hvcC5teXNob3BpZnkuY29tIiwiYXVkIjoiYXBpLWtleS0xMjMiLCJzdWIiOjMwNDE3ODk2NDA3NTksImV4cCI6MTU5MTc2NTA1OCwibmJmIjoxNTkxNzY0OTk4LCJpYXQiOjE1OTE3NjQ5OTgsImp0aSI6ImY4OTEyMTI5LTFhZjYtNGNhZC05Y2EzLTc2YjBmNzYyMTA4NyJ9.9N9jPXJHD0kNaE3S_-oEcrWpsk9FMSqWt7HzbbA_Ifw{% endif %}"
   end
 
 end

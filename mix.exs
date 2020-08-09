@@ -22,7 +22,9 @@ defmodule CustomerJwt.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:joken, "~> 2.0"},
+      {:jason, "~> 1.1"}
     ]
   end
 end
