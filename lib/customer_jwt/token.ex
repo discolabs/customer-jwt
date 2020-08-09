@@ -1,7 +1,7 @@
 defmodule CustomerJwt.Token do
   use Joken.Config
 
-  @validity_in_seconds 60
+  @validity_in_seconds Application.get_env(:customer_jwt, :validity_in_seconds)
   @shared_secret Application.get_env(:customer_jwt, :shared_secret)
 
   def generate_and_sign_for_customer(customer_id, shopify_domain, current_time) do
