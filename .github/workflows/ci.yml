@@ -1,0 +1,22 @@
+name: CI/CD
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Erlang and Elixir
+        uses: actions/setup-elixir@v1
+        with:
+          otp-version: '23.0.3'
+          elixir-version: '1.10.4'
+
+      - name: Fetch dependencies
+        run: mix deps.get
+
+      - name: Run tests
+      - run: mix test
