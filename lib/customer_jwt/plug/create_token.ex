@@ -52,9 +52,10 @@ defmodule CustomerJwt.Plug.CreateToken do
   defp generate_token(query_params) do
     customer_id = String.to_integer(query_params["customer_id"])
     shopify_domain = query_params["shop"]
-    current_time = String.to_integer(query_params["timestamp"])
 
-    {:ok, token, claims} = CustomerJwt.Token.generate_and_sign_for_customer(customer_id, shopify_domain, current_time)
+    {:ok, token, claims} = CustomerJwt.Token.generate_and_sign_for_customer(customer_id, shopify_domain)
+
+    Logger.info("---> generated token #{token}")
 
     token
   end
