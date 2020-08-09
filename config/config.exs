@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :customer_jwt, cowboy_port: 8080
 config :customer_jwt, shared_secret: nil
