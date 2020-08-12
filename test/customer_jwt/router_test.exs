@@ -30,27 +30,27 @@ defmodule CustomerJwt.RouterTest do
 
   test "token endpoint raises missing shop error when no shop provided" do
     assert_raise CustomerJwt.Plug.CreateToken.MissingShopError, fn ->
-      conn = conn(:get, "/token", %{customer_id: "3041789640759", timestamp: "1591764998", signature: "6d87576f1799f712db2a76f4bff0927239835a189203363ee9912f51de3a3fa5"})
+      conn = conn(:get, "/token", %{customer_id: "3041789640759", timestamp: "1591764998", signature: "df2f8fa97610b21a12df58394308944be5776bc0caabfd7ec130ab8510c0832d"})
       Router.call(conn, @opts)
     end
   end
 
   test "token endpoint raises missing customer error when no customer provided" do
     assert_raise CustomerJwt.Plug.CreateToken.MissingCustomerError, fn ->
-      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", timestamp: "1591764998", signature: "63e4c8c85dc022239622c64dc796356a74e3f8e29edda3c96d74530cc739c715"})
+      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", timestamp: "1591764998", signature: "5f8a7472e2e124ef0f1f82365ad247c5da59aa53aa3181c549bfab63c8abeec5"})
       Router.call(conn, @opts)
     end
   end
 
   test "token endpoint raises missing timestamp error when no timestamp provided" do
     assert_raise CustomerJwt.Plug.CreateToken.MissingTimestampError, fn ->
-      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", signature: "f7adf74de4f95e3a4f174f3f17abd604da3f2043391dc0009d954a9f5c9e823b"})
+      conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", signature: "73d4be1acac3973d50ff93f0183a7b01496552b76da7b26ab98b4efabf10dd67"})
       Router.call(conn, @opts)
     end
   end
 
   test "token endpoint returns expected jwt when shop, customer, timestamp and valid signature provided" do
-    conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", timestamp: "1591764998", signature: "45d8daaeb0f9068ed7a4cbcb8463737efb158770725ff975429f23badcf5d9d4"})
+    conn = conn(:get, "/token", %{shop: "examplestore.myshopify.com", customer_id: "3041789640759", timestamp: "1591764998", signature: "ab88c034e1149a93d02cc355abfea9ac4b46975248689817ba2d30fca19ab5e6"})
     conn = Router.call(conn, @opts)
 
     assert conn.state == :sent
