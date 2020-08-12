@@ -53,14 +53,15 @@ defmodule CustomerJwt.Plug.VerifyAppProxyRequest do
     query_params
     |> Map.delete("signature")
     |> Enum.sort()
-    |> Plug.Conn.Query.encode()
+    |> Enum.map(fn {k, v} -> "#{k}=#{v}" end)
+    |> Enum.join()
     |> generate_hmac(shared_secret)
-    |> Base.encode16()
-    |> String.downcase()
   end
 
   defp generate_hmac(query_hash, shared_secret) do
     :crypto.hmac(:sha256, shared_secret, query_hash)
+    |> Base.encode16()
+    |> String.downcase()
   end
 
 end
