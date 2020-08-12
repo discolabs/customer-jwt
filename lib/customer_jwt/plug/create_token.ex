@@ -46,7 +46,7 @@ defmodule CustomerJwt.Plug.CreateToken do
   defp generate_response(conn, query_params) do
     conn
     |> put_resp_content_type("application/liquid")
-    |> send_resp(200, "{% if customer.id == #{query_params["customer_id"]} %}#{generate_token(query_params)}{% endif %}")
+    |> send_resp(200, "{% layout none %}{% if customer.id == #{query_params["customer_id"]} %}#{generate_token(query_params)}{% endif %}")
   end
 
   defp generate_token(query_params) do
